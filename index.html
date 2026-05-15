@@ -215,7 +215,38 @@
 
 
 
-  .product-stack { display: grid; gap: 22px; }
+  .product-stack { display: grid; gap: 18px; }
+  .collateral-category {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: -0.45px;
+    color: var(--ink);
+    margin: 34px 0 8px;
+    padding: 18px 20px 16px;
+    background: linear-gradient(90deg, var(--accent-light), rgba(255,255,255,0));
+    border-left: 5px solid var(--accent);
+    border-bottom: 1px solid var(--border-strong);
+    border-radius: 12px 0 0 12px;
+    line-height: 1.15;
+  }
+  .collateral-category:first-child { margin-top: 0; }
+  .placeholder-link { cursor: default; }
+
+  .coming-soon-tag {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 1px solid rgba(45,122,79,0.18);
+    border-radius: 999px;
+    padding: 3px 8px;
+  }
+
   .product-block {
     background: var(--surface-card);
     border: 1px solid var(--border);
@@ -227,7 +258,19 @@
     background: linear-gradient(180deg, #fff, var(--surface));
     border-bottom: 1px solid var(--border);
     display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    width: 100%; text-align: left; border-left: 0; border-right: 0; border-top: 0;
+    font-family: 'DM Sans', sans-serif; color: inherit;
   }
+  button.product-head { cursor: pointer; }
+  .device-block.collapsible .resource-grid { display: none; }
+  .device-block.collapsible.open .resource-grid { display: grid; }
+  .device-block.collapsible .expand-indicator { display: inline-block; margin-left: 6px; transition: transform 0.15s; }
+  .device-block.collapsible.open .expand-indicator { transform: rotate(180deg); }
+
+  .product-block.collapsible .resource-grid { display: none; }
+  .product-block.collapsible.open .resource-grid { display: grid; }
+  .product-block.collapsible .expand-indicator { display: inline-block; margin-left: 6px; transition: transform 0.15s; }
+  .product-block.collapsible.open .expand-indicator { transform: rotate(180deg); }
   .product-kicker {
     font-family: 'DM Mono', monospace;
     font-size: 10.5px; letter-spacing: 0.9px; text-transform: uppercase;
@@ -264,6 +307,22 @@
   }
   .resource-title { font-size: 13.5px; line-height: 1.35; color: var(--ink); font-weight: 500; margin-bottom: 6px; }
   .resource-meta { font-size: 11.5px; color: var(--ink-light); margin-top: auto; }
+  .resource-group { cursor: default; }
+  .resource-group:hover { transform: none; }
+  .resource-links { display: grid; gap: 8px; margin-top: 12px; }
+  .resource-subitem {
+    display: block;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    line-height: 1.35;
+  }
+  .resource-subitem:hover { border-color: var(--accent); background: var(--accent-light); }
   .native-note {
     margin-top: 18px; padding: 14px 16px; border-radius: 10px;
     background: var(--accent-light); border: 1px solid #d6e7dc;
@@ -448,13 +507,12 @@
         <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         Price List
       </button>
-
-      <div class="nav-label" style="margin-top:24px;">Coming Soon</div>
       <button class="nav-item" onclick="switchSection('quizzes', this)">
         <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
         Brand Guidelines
-        <span class="nav-badge">Soon</span>
       </button>
+
+      <div class="nav-label" style="margin-top:24px;">Coming Soon</div>
       <button class="nav-item" onclick="switchSection('agreements', this)">
         <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         Agreements
@@ -486,116 +544,313 @@
       <div class="section active" id="sec-collateral">
         <div class="section-header">
           <h2>Collateral Repository</h2>
-          <p>Product-wise brochures, datasheets, sales decks, application notes, and technical documents hosted directly inside this portal.</p>
+          <p>Product-wise collateral blocks. Links are placeholders for now and can be connected to Google Drive, YouTube, or webpage URLs later.</p>
         </div>
 
         <div class="product-stack">
-          <section class="product-block">
-            <div class="product-head">
+          <div class="collateral-category">Automated Devices</div>
+
+          <section class="product-block device-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
               <div>
-                <div class="product-kicker">Automation</div>
+                <div class="product-kicker">Automated Device</div>
                 <div class="product-title">Manta</div>
-                <div class="product-copy">Automated sample preparation robot collaterals for distributor sales, demos, installation, and technical discussions.</div>
+                <div class="product-copy">Click to view collateral blocks for Manta.</div>
               </div>
-              <span class="product-count">5 files</span>
-            </div>
+              <span class="product-count">4 items <span class="expand-indicator">⌄</span></span>
+            </button>
             <div class="resource-grid">
-              <a class="resource-card" href="collaterals/manta/manta-brochure.pdf" target="_blank"><span class="resource-type">BROCHURE</span><div class="resource-title">Manta Product Brochure</div><div class="resource-meta">PDF · Customer-facing</div></a>
-              <a class="resource-card" href="collaterals/manta/manta-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Manta Technical Datasheet</div><div class="resource-meta">PDF · Specifications</div></a>
-              <a class="resource-card" href="collaterals/manta/manta-sales-deck.pdf" target="_blank"><span class="resource-type">SALES DECK</span><div class="resource-title">Manta Distributor Sales Deck</div><div class="resource-meta">PDF · Pitch material</div></a>
-              <a class="resource-card" href="collaterals/manta/manta-installation-checklist.pdf" target="_blank"><span class="resource-type">CHECKLIST</span><div class="resource-title">Installation & Site Readiness Checklist</div><div class="resource-meta">PDF · Pre-installation</div></a>
-              <a class="resource-card" href="collaterals/manta/manta-faq.pdf" target="_blank"><span class="resource-type">FAQ</span><div class="resource-title">Manta Technical FAQs</div><div class="resource-meta">PDF · Sales support</div></a>
+              <a class="resource-card" href="https://www.cambrianbioworks.com/manta" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open Manta webpage</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">BROCHURE</span><div class="resource-title">Brochures</div><div class="resource-meta">1 PDF available</div><div class="resource-links"><a class="resource-subitem" href="https://drive.google.com/file/d/1DviEHPMobCiU89oVVQdhqg8zlTd8k9eT/view?usp=drive_link" target="_blank" rel="noopener noreferrer">Manta Brochure</a></div></div>
+              <a class="resource-card" href="https://docs.google.com/presentation/d/1ZuWu7rjyEq-3z7mtpHExDW3ALJBVSCoiWgh_kngPYD0/edit?slide=id.g2785de663e6_0_42#slide=id.g2785de663e6_0_42" target="_blank" rel="noopener noreferrer"><span class="resource-type">PITCH DECK</span><div class="resource-title">Pitch deck</div><div class="resource-meta">Open presentation</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">VIDEO</span><div class="resource-title">YouTube videos</div><div class="resource-meta">2 videos available</div><div class="resource-links"><a class="resource-subitem" href="https://youtu.be/-dL768IW2LA" target="_blank" rel="noopener noreferrer">Virtual tour of Manta - Nucleic acid isolation machine</a><a class="resource-subitem" href="https://youtu.be/-dL768IW2LA" target="_blank" rel="noopener noreferrer">Discover the Manta</a></div></div>
             </div>
           </section>
 
-          <section class="product-block">
-            <div class="product-head">
+          <section class="product-block device-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
               <div>
-                <div class="product-kicker">Pre-analytical Automation</div>
+                <div class="product-kicker">Automated Device</div>
                 <div class="product-title">Beluga</div>
-                <div class="product-copy">Collateral for end-to-end primary tube to eluate workflows, traceability, contamination control, and clinical lab automation positioning.</div>
+                <div class="product-copy">Click to view collateral blocks for Beluga.</div>
               </div>
-              <span class="product-count">4 files</span>
-            </div>
+              <span class="product-count">4 items <span class="expand-indicator">⌄</span></span>
+            </button>
             <div class="resource-grid">
-              <a class="resource-card" href="collaterals/beluga/beluga-brochure.pdf" target="_blank"><span class="resource-type">BROCHURE</span><div class="resource-title">Beluga Product Brochure</div><div class="resource-meta">PDF · Customer-facing</div></a>
-              <a class="resource-card" href="collaterals/beluga/beluga-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Beluga Technical Datasheet</div><div class="resource-meta">PDF · Specifications</div></a>
-              <a class="resource-card" href="collaterals/beluga/beluga-sales-deck.pdf" target="_blank"><span class="resource-type">SALES DECK</span><div class="resource-title">Beluga Distributor Sales Deck</div><div class="resource-meta">PDF · Pitch material</div></a>
-              <a class="resource-card" href="collaterals/beluga/beluga-traceability-note.pdf" target="_blank"><span class="resource-type">TECH NOTE</span><div class="resource-title">Traceability & Audit Trail Note</div><div class="resource-meta">PDF · Technical reference</div></a>
+              <a class="resource-card" href="https://www.cambrianbioworks.com/beluga" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open Beluga webpage</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">BROCHURE</span><div class="resource-title">Brochures</div><div class="resource-meta">4 PDFs available</div><div class="resource-links"><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/31fb5fb6-4272-4dcb-8be9-f6be385802ab/CBW_Beluga_Brochure_v1.3.pdf?table=block&amp;id=30de62ff-5ccc-8063-8c1f-dfde58b3f67c&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=wTazaFQAKvqmpVaTezM39gLvOBSsel8MrjFU-BksVXY&amp;downloadName=CBW+Beluga+Brochure+v1.3.pdf" target="_blank" rel="noopener noreferrer">Beluga Brochure</a><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/c9efd9d4-a0fe-410c-8c08-3e51d6f22536/CBW_Beluga_WES_Flyer_v1.1.pdf?table=block&amp;id=30de62ff-5ccc-8096-875f-ce076939dd46&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=vaO2yEMP4IOg1MlWQwSOQr6sGMkakliTvIYsBbxw5iE&amp;downloadName=CBW+Beluga+WES+Flyer+v1.1.pdf" target="_blank" rel="noopener noreferrer">Beluga WES Flyer</a><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/8535bc9b-5001-4f88-8e3b-d0877789e6f3/CBW_Beluga_NIPT_Application_Note_v1.1.pdf?table=block&amp;id=35de62ff-5ccc-801b-8f0a-f9e948bfbf22&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=mhhDmdkqO1VfMCo_HuDjdhK2jI_8Be-KnNIunot9k-E&amp;downloadName=CBW+Beluga+NIPT+Application+Note+v1.1.pdf" target="_blank" rel="noopener noreferrer">Beluga NIPT Application Note</a><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/a1e0d4a5-ecf5-46c0-b7a6-d58d47634ed5/CBW_Beluga_OncoSeek_Application_Note_v1.1.pdf?table=block&amp;id=360e62ff-5ccc-80ea-978d-de25c2f07650&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=q-ChxqARqJoE3RmoOwpsh92JzTtZAGvxMz9wT1oxY1o&amp;downloadName=CBW+Beluga+OncoSeek+Application+Note+v1.1.pdf" target="_blank" rel="noopener noreferrer">Beluga OncoSeek Application Note</a></div></div>
+              <a class="resource-card placeholder-link" href="#" onclick="return false;"><span class="resource-type">PITCH DECK</span><div class="resource-title">Pitch deck</div><div class="resource-meta">Link to be added</div><span class="coming-soon-tag">Coming soon</span></a>
+              <div class="resource-card resource-group"><span class="resource-type">VIDEO</span><div class="resource-title">YouTube videos</div><div class="resource-meta">1 video available</div><div class="resource-links"><a class="resource-subitem" href="https://www.youtube.com/watch?si=I9Vcx3N34PJkJiqN&amp;v=64AUslFQxKE&amp;feature=youtu.be" target="_blank" rel="noopener noreferrer">Introducing Beluga: A true walkaway automation</a></div></div>
             </div>
           </section>
 
-          <section class="product-block">
-            <div class="product-head">
+          <section class="product-block device-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
               <div>
-                <div class="product-kicker">Library Preparation</div>
+                <div class="product-kicker">Automated Device</div>
                 <div class="product-title">Orca</div>
-                <div class="product-copy">Sales and technical materials for automated NGS library preparation workflows and open kit compatibility.</div>
+                <div class="product-copy">Click to view collateral blocks for Orca.</div>
               </div>
-              <span class="product-count">3 files</span>
-            </div>
+              <span class="product-count">4 items <span class="expand-indicator">⌄</span></span>
+            </button>
             <div class="resource-grid">
-              <a class="resource-card" href="collaterals/orca/orca-brochure.pdf" target="_blank"><span class="resource-type">BROCHURE</span><div class="resource-title">Orca Product Brochure</div><div class="resource-meta">PDF · Customer-facing</div></a>
-              <a class="resource-card" href="collaterals/orca/orca-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Orca Technical Datasheet</div><div class="resource-meta">PDF · Specifications</div></a>
-              <a class="resource-card" href="collaterals/orca/orca-sales-deck.pdf" target="_blank"><span class="resource-type">SALES DECK</span><div class="resource-title">Orca Distributor Sales Deck</div><div class="resource-meta">PDF · Pitch material</div></a>
+              <a class="resource-card" href="https://www.cambrianbioworks.com/orca" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open Orca webpage</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">BROCHURE</span><div class="resource-title">Brochures</div><div class="resource-meta">1 PDF available</div><div class="resource-links"><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/af5eba46-a3bd-42d8-9d88-ddca849099de/CBW_Orca_Brochure_v1.1.pdf?table=block&amp;id=30de62ff-5ccc-80ea-b5fd-c0b09a2a2a05&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=KhqGXSWsKi6IAhlzFS8ryHnP8YBkpbsItqinF53smkg&amp;downloadName=CBW+Orca+Brochure+v1.1.pdf" target="_blank" rel="noopener noreferrer">Orca Brochure</a></div></div>
+              <a class="resource-card placeholder-link" href="#" onclick="return false;"><span class="resource-type">PITCH DECK</span><div class="resource-title">Pitch deck</div><div class="resource-meta">Link to be added</div><span class="coming-soon-tag">Coming soon</span></a>
+              <div class="resource-card resource-group"><span class="resource-type">VIDEO</span><div class="resource-title">YouTube videos</div><div class="resource-meta">2 videos available</div><div class="resource-links"><a class="resource-subitem" href="https://youtu.be/eyFzYs9oRP0" target="_blank" rel="noopener noreferrer">Orca NGS Overview</a><a class="resource-subitem" href="https://youtu.be/ul6kPfibqGs" target="_blank" rel="noopener noreferrer">Orca UI/UX Walkthrough: Streamlined Library Preparation for NGS Labs</a></div></div>
             </div>
           </section>
 
-          <section class="product-block">
-            <div class="product-head">
+          <section class="product-block device-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
               <div>
-                <div class="product-kicker">Reagents</div>
-                <div class="product-title">Extraction Kits</div>
-                <div class="product-copy">Product-wise datasheets and application notes for automated and manual nucleic acid extraction kits.</div>
+                <div class="product-kicker">Automated Device</div>
+                <div class="product-title">Medusa</div>
+                <div class="product-copy">Click to view collateral blocks for Medusa.</div>
               </div>
-              <span class="product-count">6 files</span>
-            </div>
+              <span class="product-count">2 items <span class="expand-indicator">⌄</span></span>
+            </button>
             <div class="resource-grid">
-              <a class="resource-card" href="collaterals/extraction-kits/whole-blood-gdna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Whole Blood gDNA Isolation Kit</div><div class="resource-meta">PDF · Automated / manual</div></a>
-              <a class="resource-card" href="collaterals/extraction-kits/onco-seek-cfdna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">OncoSeek cfDNA Isolation Kit</div><div class="resource-meta">PDF · Liquid biopsy</div></a>
-              <a class="resource-card" href="collaterals/extraction-kits/ffpe-gdna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">FFPE gDNA Isolation Kit</div><div class="resource-meta">PDF · FFPE workflow</div></a>
-              <a class="resource-card" href="collaterals/extraction-kits/ffpe-rna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">FFPE RNA Extraction Kit</div><div class="resource-meta">PDF · RNA workflow</div></a>
-              <a class="resource-card" href="collaterals/extraction-kits/blood-rna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Blood RNA Extraction Kit</div><div class="resource-meta">PDF · Blood RNA</div></a>
-              <a class="resource-card" href="collaterals/extraction-kits/viral-dna-rna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Viral DNA/RNA Isolation Kit</div><div class="resource-meta">PDF · Viral workflow</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">BROCHURE</span><div class="resource-title">Brochures</div><div class="resource-meta">1 PDF available</div><div class="resource-links"><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/a5a7363b-44bf-4f65-9ca0-8b5d9c814b7b/CBW_Medusa_Flyer_v1.1.pdf?table=block&amp;id=360e62ff-5ccc-80ef-9ea9-c095422d7551&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=rOigVzKcnEYq5UenXEvINOkVhoeYM47lz15lUn5kVV4&amp;downloadName=CBW+Medusa+Flyer+v1.1.pdf" target="_blank" rel="noopener noreferrer">Product flyer</a></div></div>
+              <div class="resource-card resource-group"><span class="resource-type">VIDEO</span><div class="resource-title">YouTube videos</div><div class="resource-meta">1 video available</div><div class="resource-links"><a class="resource-subitem" href="https://youtu.be/5-oeg7UQvOQ" target="_blank" rel="noopener noreferrer">Introducing Medusa: Automated Liquid Handling Robot</a></div></div>
             </div>
           </section>
-
-          <section class="product-block">
-            <div class="product-head">
+          <div class="collateral-category">Nucleic Acid Extraction Kits</div>
+          <section class="product-block extraction-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
               <div>
-                <div class="product-kicker">Cleanup & Size Selection</div>
-                <div class="product-title">CamSelect</div>
-                <div class="product-copy">Collateral for CamSelect NGS cleanup beads and CamSelect Long size selection for long-read sequencing workflows.</div>
+                <div class="product-kicker">Extraction Kit</div>
+                <div class="product-title">Cambrian Whole Blood gDNA Isolation Kit</div>
+                <div class="product-copy">Click to view collateral blocks for this kit.</div>
               </div>
-              <span class="product-count">4 files</span>
-            </div>
+              <span class="product-count">3 items <span class="expand-indicator">⌄</span></span>
+            </button>
             <div class="resource-grid">
-              <a class="resource-card" href="collaterals/camselect/camselect-ngs-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">CamSelect NGS Datasheet</div><div class="resource-meta">PDF · Cleanup beads</div></a>
-              <a class="resource-card" href="collaterals/camselect/camselect-long-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">CamSelect Long Datasheet</div><div class="resource-meta">PDF · Long-read size selection</div></a>
-              <a class="resource-card" href="collaterals/camselect/camselect-long-application-note.pdf" target="_blank"><span class="resource-type">APP NOTE</span><div class="resource-title">CamSelect Long Application Note</div><div class="resource-meta">PDF · Technical reference</div></a>
-              <a class="resource-card" href="collaterals/camselect/camselect-sales-deck.pdf" target="_blank"><span class="resource-type">SALES DECK</span><div class="resource-title">CamSelect Distributor Sales Deck</div><div class="resource-meta">PDF · Pitch material</div></a>
+              <a class="resource-card" href="https://www.cambrianbioworks.com/whole-blood-gdna" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">FLYER / APP NOTE</span><div class="resource-title">Product flyer and application notes</div><div class="resource-meta">1 PDF available</div><div class="resource-links"><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/a3e2a9cb-1ac0-46f5-9a0b-77cf1c9b7ba1/CBW_Blood_DNA_Application_Note_v1.1.pdf?table=block&amp;id=30de62ff-5ccc-802c-bf2d-eef669c47515&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=WTnFfYSpf2t2ZKkl9daamn3_W9lZUCYIajwAQ2iWPgc&amp;downloadName=CBW+Blood+DNA+Application+Note+v1.1.pdf" target="_blank" rel="noopener noreferrer">CBW Blood DNA Application Note</a></div></div>
+              <div class="resource-card resource-group"><span class="resource-type">VIDEO</span><div class="resource-title">YouTube videos</div><div class="resource-meta">1 video available</div><div class="resource-links"><a class="resource-subitem" href="https://youtu.be/5DbNPRkAka0?si=AxlQVQO3nBnIwIi9" target="_blank" rel="noopener noreferrer">How to: Extract gDNA from Whole Blood on Manta</a></div></div>
+            
             </div>
           </section>
-
-          <section class="product-block">
-            <div class="product-head">
+          <section class="product-block extraction-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
               <div>
-                <div class="product-kicker">Digital Pathology</div>
-                <div class="product-title">Eva</div>
-                <div class="product-copy">Digital pathology software collateral for microscopy capture, image review, and workflow modernization conversations.</div>
+                <div class="product-kicker">Extraction Kit</div>
+                <div class="product-title">Cambrian Blood RNA Isolation Kit</div>
+                <div class="product-copy">Click to view collateral blocks for this kit.</div>
               </div>
-              <span class="product-count">3 files</span>
-            </div>
+              <span class="product-count">3 items <span class="expand-indicator">⌄</span></span>
+            </button>
             <div class="resource-grid">
-              <a class="resource-card" href="collaterals/eva/eva-brochure.pdf" target="_blank"><span class="resource-type">BROCHURE</span><div class="resource-title">Eva Product Brochure</div><div class="resource-meta">PDF · Customer-facing</div></a>
-              <a class="resource-card" href="collaterals/eva/eva-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Eva Technical Datasheet</div><div class="resource-meta">PDF · Specifications</div></a>
-              <a class="resource-card" href="collaterals/eva/eva-sales-deck.pdf" target="_blank"><span class="resource-type">SALES DECK</span><div class="resource-title">Eva Distributor Sales Deck</div><div class="resource-meta">PDF · Pitch material</div></a>
+              <a class="resource-card" href="https://www.cambrianbioworks.com/cambrian-blood-rna" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">FLYER / APP NOTE</span><div class="resource-title">Product flyer and application note</div><div class="resource-meta">2 PDFs available</div><div class="resource-links"><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/2d351e10-90ac-4156-9bbc-61a98f4f716e/CBW_Blood_RNA_Flyer_v1.1.pdf?table=block&amp;id=30de62ff-5ccc-8006-bdc9-c2345269472c&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=WnS7_dw4qG5rOoDykf9oMTSWNa4Un61BFLu7r4UmqWU&amp;downloadName=CBW+Blood+RNA+Flyer+v1.1.pdf" target="_blank" rel="noopener noreferrer">Cambrian Blood RNA Isolation Kit</a><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/88ca322f-cba0-4475-b155-362b7f7a86b9/CBW_Blood_RNA_Application_Note_v1.1.pdf?table=block&amp;id=30de62ff-5ccc-8010-a30a-f4249909de94&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=zBtj1WCa4VtwFE1AdP7jyCk9X6ykQ_iyUrbhXUphDWM&amp;downloadName=CBW+Blood+RNA+Application+Note+v1.1.pdf" target="_blank" rel="noopener noreferrer">CBW Blood RNA Application Note</a></div></div>
+              <div class="resource-card resource-group"><span class="resource-type">VIDEO</span><div class="resource-title">YouTube videos</div><div class="resource-meta">1 video available</div><div class="resource-links"><a class="resource-subitem" href="https://youtu.be/93aFxiwbNns?si=HEua5UsePhfoR_Cx" target="_blank" rel="noopener noreferrer">Optimizing blood RNA extraction for scalable transcriptomics</a></div></div>
+            
             </div>
           </section>
-        </div>
+          <section class="product-block extraction-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Extraction Kit</div>
+                <div class="product-title">Cambrian FFPE gDNA Isolation Kit</div>
+                <div class="product-copy">Click to view collateral blocks for this kit.</div>
+              </div>
+              <span class="product-count">2 items <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://www.cambrianbioworks.com/ffpe-dna" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">FLYER / APP NOTE</span><div class="resource-title">Product flyer and application notes</div><div class="resource-meta">1 PDF available</div><div class="resource-links"><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/81902b3a-419b-4b65-9b9e-8a473a9351eb/CBW_FFPE_DNA_Flyer_v1.1.pdf?table=block&amp;id=30de62ff-5ccc-800f-8497-ca38369f6f89&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=L7xc_TgJVXW70TzKmoDMJlZufSmZmdVxfTPmgrwnHBg&amp;downloadName=CBW+FFPE+DNA+Flyer+v1.1.pdf" target="_blank" rel="noopener noreferrer">CBW FFPE DNA Flyer</a></div></div>
+            
+            
+            </div>
+          </section>
+          <section class="product-block extraction-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Extraction Kit</div>
+                <div class="product-title">Cambrian FFPE RNA Extraction Kit</div>
+                <div class="product-copy">Click to view collateral blocks for this kit.</div>
+              </div>
+              <span class="product-count">2 items <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://www.cambrianbioworks.com/ffpe-rna" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">FLYER / APP NOTE</span><div class="resource-title">Product flyer and application notes</div><div class="resource-meta">1 PDF available</div><div class="resource-links"><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/220cfd63-0413-49ec-a720-53e3c5ce23fb/CBW_FFPE_RNA_kit_Flyer_v1.1.pdf?table=block&amp;id=30de62ff-5ccc-800f-8f81-ea4d1fea84ed&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=PHDzQm6NoxBhzfLtFBye1pgC4CkAlo3tV3bNcKeGLWM&amp;downloadName=CBW+FFPE+RNA+kit+Flyer+v1.1.pdf" target="_blank" rel="noopener noreferrer">CBW FFPE RNA Kit Flyer</a></div></div>
+            
+            </div>
+          </section>
+          <section class="product-block extraction-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Extraction Kit</div>
+                <div class="product-title">Cambrian OncoSeek cfDNA Isolation Kit</div>
+                <div class="product-copy">Click to view collateral blocks for this kit.</div>
+              </div>
+              <span class="product-count">2 items <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://www.cambrianbioworks.com/oncoseek#Liquid%20biopsy" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">FLYER / APP NOTE</span><div class="resource-title">Product flyer and application notes</div><div class="resource-meta">1 PDF available</div><div class="resource-links"><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/fdbf8af1-e486-4eab-9c57-89ab35f1a7dc/CBW_cfDNA_Flyer_v1.1.pdf?table=block&amp;id=30de62ff-5ccc-80e1-93bb-f2bece5ab5aa&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=zwCAGq1gL2aBuUZP3wM869tf3bMb1fNlPPPkE-CeYOU&amp;downloadName=CBW+cfDNA+Flyer+v1.1.pdf" target="_blank" rel="noopener noreferrer">Cambrian cell-free DNA Isolation Kit Flyer</a></div></div>
+            
+            </div>
+          </section>
+          <section class="product-block extraction-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Extraction Kit</div>
+                <div class="product-title">Cambrian Viral DNA/RNA Isolation Kit</div>
+                <div class="product-copy">Click to view collateral blocks for this kit.</div>
+              </div>
+              <span class="product-count">2 items <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://www.cambrianbioworks.com/cambrian-viral-na" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">FLYER / APP NOTE</span><div class="resource-title">Product flyer and application notes</div><div class="resource-meta">1 PDF available</div><div class="resource-links"><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/106f3795-1948-4c0f-bb66-292962942713/CBW_Viral_DNA_RNA_Flyer_v1.1.pdf?table=block&amp;id=30de62ff-5ccc-805d-9639-cb0a60743d99&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=k5QMttxWhn2I6W3vjLO3aaTyjn8Dai2wFpDFua7o1ho&amp;downloadName=CBW+Viral+DNA_RNA+Flyer+v1.1.pdf" target="_blank" rel="noopener noreferrer">Cambrian’s Automated Viral DNA/RNA</a></div></div>
+            
+            </div>
+          </section>
+          <section class="product-block extraction-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Extraction Kit</div>
+                <div class="product-title">Cambrian Stool DNA Extraction Kit</div>
+                <div class="product-copy">Click to view collateral blocks for this kit.</div>
+              </div>
+              <span class="product-count">2 items <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://www.cambrianbioworks.com/cambrian-stool-gdna" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+              <div class="resource-card resource-group"><span class="resource-type">FLYER / APP NOTE</span><div class="resource-title">Product flyer and application notes</div><div class="resource-meta">1 PDF available</div><div class="resource-links"><a class="resource-subitem" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/74132571-6b5b-449e-b83d-81b956c0520d/CBW_Stool_DNA_Flyer_v1.1.pdf?table=block&amp;id=30de62ff-5ccc-80f4-843d-e56a56f6a9a1&amp;spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&amp;expirationTimestamp=1778868000000&amp;signature=M9smerwwnEX3-MBXrDyt8RV3_Q6JbU0uJDnZq7cizY4&amp;downloadName=CBW+Stool+DNA+Flyer+v1.1.pdf" target="_blank" rel="noopener noreferrer">Cambrian Stool DNA Isolation Kit Flyer</a></div></div>
+            
+            </div>
+          </section>
+          <section class="product-block extraction-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Extraction Kit</div>
+                <div class="product-title">Cambrian Tissue gDNA Isolation Kit</div>
+                <div class="product-copy">Click to view collateral blocks for this kit.</div>
+              </div>
+              <span class="product-count">1 item <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://www.cambrianbioworks.com/cambrian-tissue-gdna" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+            
+            </div>
+          </section>
+          <section class="product-block extraction-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Extraction Kit</div>
+                <div class="product-title">Cambrian Saliva DNA Isolation Kit</div>
+                <div class="product-copy">Click to view collateral blocks for this kit.</div>
+              </div>
+              <span class="product-count">1 item <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://www.cambrianbioworks.com/cambrian-saliva-gdna" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+            
+            </div>
+          </section>
+          <div class="collateral-category">Sample Collection Kits</div>
+          <section class="product-block sample-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Sample Collection</div>
+                <div class="product-title">CamOptima Buccal Swab Collection Kit</div>
+                <div class="product-copy">Click to view collateral blocks for this kit.</div>
+              </div>
+              <span class="product-count">2 items <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://www.cambrianbioworks.com/swab-collection-tubes" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+              <a class="resource-card" href="https://youtu.be/gHwa4g2vx4Y" target="_blank" rel="noopener noreferrer"><span class="resource-type">VIDEO</span><div class="resource-title">YouTube videos</div><div class="resource-meta">Collecting DNA sample using CamOptima collection kit</div></a>
+            </div>
+          </section>
+          <section class="product-block sample-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Sample Collection</div>
+                <div class="product-title">CamOptima Skin Biome Collection Kit</div>
+                <div class="product-copy">Click to view collateral blocks for this kit.</div>
+              </div>
+              <span class="product-count">1 item <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://www.cambrianbioworks.com/swab-collection-tubes" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+            </div>
+          </section>
+          <div class="collateral-category">NGS Library Preparation Reagents</div>
+          <section class="product-block ngs-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">NGS Reagent</div>
+                <div class="product-title">CamSelect NGS: PCR Cleanup and Size Selection</div>
+                <div class="product-copy">Click to view collateral blocks for this reagent.</div>
+              </div>
+              <span class="product-count">2 items <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://www.cambrianbioworks.com/camselect_ngs" target="_blank" rel="noopener noreferrer"><span class="resource-type">WEBPAGE</span><div class="resource-title">Webpage</div><div class="resource-meta">Open product webpage</div></a>
+              <a class="resource-card" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/e48b6f01-1a81-47de-b523-d121b5139376/CBW_CamSelect_NGS_Flyer_v1.4.pdf?table=block&id=30de62ff-5ccc-807f-bf50-d1f3197f8da7&spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&expirationTimestamp=1778868000000&signature=x1DO7fxKi61Luh-fN_DA5qYdy8-fay8unkppf0mTrcc&downloadName=CBW+CamSelect+NGS+Flyer+v1.4.pdf" target="_blank" rel="noopener noreferrer"><span class="resource-type">FLYER</span><div class="resource-title">CamSelect NGS Flyer</div><div class="resource-meta">Open linked flyer</div></a>
+            </div>
+          </section>
+          <section class="product-block ngs-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">NGS Reagent</div>
+                <div class="product-title">CamSelect Long</div>
+                <div class="product-copy">Click to view collateral blocks for this reagent.</div>
+              </div>
+              <span class="product-count">1 item <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/b79e60ea-76b9-4baa-ac88-05cc77fec3d0/CBW_CamSelect_Long_Application_Note_v1.2.pdf?table=block&id=360e62ff-5ccc-8044-99f2-c61065a22d7d&spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&expirationTimestamp=1778868000000&signature=5pSMpEprgddDe75t7NlsyKpAJ1UcsAM3URR51O8LFSA&downloadName=CBW+CamSelect+Long+Application+Note+v1.2.pdf" target="_blank" rel="noopener noreferrer"><span class="resource-type">FLYER</span><div class="resource-title">CBW CamSelect Long Application Note</div><div class="resource-meta">Open linked flyer</div></a>
+            </div>
+          </section>
+          <div class="collateral-category">Product Catalogues</div>
+          <section class="product-block catalogue-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Catalogue</div>
+                <div class="product-title">Products for Oncology Workflows</div>
+                <div class="product-copy">Click to view this catalogue block.</div>
+              </div>
+              <span class="product-count">1 item <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/7a679fc1-299a-4d00-bd18-810aa10194d4/CBW_The_OncoSeek_Bundle_v1.2.pdf?table=block&id=30de62ff-5ccc-8000-b49f-e9efd77806ed&spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&expirationTimestamp=1778868000000&signature=3mO0KEeqmZHaHYY7qMEj37pwk_66gcQqKRGsT5DE-7Q&downloadName=CBW+The+OncoSeek+Bundle+v1.2.pdf" target="_blank" rel="noopener noreferrer"><span class="resource-type">CATALOGUE</span><div class="resource-title">The OncoSeek Bundle</div><div class="resource-meta">Open linked catalogue</div></a>
+            </div>
+          </section>
+          <section class="product-block catalogue-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Catalogue</div>
+                <div class="product-title">Magnetic Bead Solutions for NGS</div>
+                <div class="product-copy">Click to view this catalogue block.</div>
+              </div>
+              <span class="product-count">1 item <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/cbccacb9-fb66-47f7-9e5a-d8d9f8a320fe/CBW_NGS_Beads_Catalogue_v1.1.pdf?table=block&id=30de62ff-5ccc-80fd-a630-c219667e95a1&spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&expirationTimestamp=1778868000000&signature=QOhpgH1xGyDi--aCbbFyk5usUJHxoABmkkoUu81pRXQ&downloadName=CBW+NGS+Beads+Catalogue+v1.1.pdf" target="_blank" rel="noopener noreferrer"><span class="resource-type">CATALOGUE</span><div class="resource-title">CBW NGS Beads Catalogue</div><div class="resource-meta">Open linked catalogue</div></a>
+            </div>
+          </section>
+          <section class="product-block catalogue-block collapsible">
+            <button class="product-head" type="button" onclick="toggleProduct(this)">
+              <div>
+                <div class="product-kicker">Catalogue</div>
+                <div class="product-title">Cambrian’s Product Catalogue for Genomic Sample Preparation</div>
+                <div class="product-copy">Click to view this catalogue block.</div>
+              </div>
+              <span class="product-count">1 item <span class="expand-indicator">⌄</span></span>
+            </button>
+            <div class="resource-grid">
+              <a class="resource-card" href="https://file.notion.so/f/f/b2af3912-b182-4f71-a0f6-97eb91c47155/0093eae8-1877-400a-842c-9fe370926bff/CBW_Product_Catalogue_v1.1.pdf?table=block&id=30de62ff-5ccc-8012-bb37-c4537092aed3&spaceId=b2af3912-b182-4f71-a0f6-97eb91c47155&expirationTimestamp=1778868000000&signature=2JSEOWhjBReb-mvQpAb4_-FdOienzM0m3izdSoSMlBE&downloadName=CBW+Product+Catalogue+v1.1.pdf" target="_blank" rel="noopener noreferrer"><span class="resource-type">CATALOGUE</span><div class="resource-title">Product Catalogue</div><div class="resource-meta">Open linked catalogue</div></a>
+            </div>
+          </section>        </div>
 
         <div class="native-note">
-          To make the links live, place each PDF inside the matching local folder path shown in the link, for example: <strong>collaterals/manta/manta-brochure.pdf</strong>. This keeps the collateral hosted natively with the portal instead of sending users to Notion.
+          The structure has been created first. Share the final Google Drive links, YouTube links, and webpage links later, and each placeholder block can be wired to the correct destination.
         </div>
       </div>
 
@@ -696,16 +951,21 @@
         </div>
       </div>
 
-      <!-- QUIZZES COMING SOON -->
+      <!-- BRAND GUIDELINES -->
       <div class="section" id="sec-quizzes">
         <div class="section-header">
           <h2>Brand Guidelines</h2>
           <p>Access approved brand usage rules, logo guidance, and visual identity references.</p>
         </div>
-        <div class="coming-soon">
-          <div class="cs-icon">🎓</div>
-          <h3>Coming soon</h3>
-          <p>Brand guideline materials are being prepared.<br>Check back shortly.</p>
+        <div class="collateral-grid">
+          <a class="coll-card" href="https://drive.google.com/drive/folders/1fxKWOLH-4pft_BDkhZkDTN00602BJE9f?usp=sharing" target="_blank" rel="noopener noreferrer">
+            <div class="coll-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div class="coll-title">Brand Guidelines</div>
+            <div class="coll-meta">Logo, colours, typography, and usage rules</div>
+            <div class="coll-arrow">Open Drive Folder →</div>
+          </a>
         </div>
       </div>
 
@@ -822,6 +1082,12 @@ function filterPrices() {
     return matchQ && matchCat;
   });
   renderTable(filtered);
+}
+
+function toggleProduct(btn) {
+  const block = btn.closest('.product-block');
+  if (!block) return;
+  block.classList.toggle('open');
 }
 
 const sectionTitles = {
