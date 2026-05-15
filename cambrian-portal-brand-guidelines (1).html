@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cambrian Bioworks — Distributor Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f1c14;
+    --ink-mid: #3a4a3f;
+    --ink-light: #7a8c80;
+    --ink-faint: #b8c8bc;
+    --surface: #f5f4f0;
+    --surface-card: #ffffff;
+    --surface-hover: #eeedea;
+    --accent: #1e5c38;
+    --accent-light: #e8f2ec;
+    --accent-mid: #2d7a4f;
+    --border: #dddbd6;
+    --border-strong: #c4c1ba;
+    --red-light: #fdf0ee;
+    --red: #c24b2a;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── SIDEBAR ── */
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .logo-mark {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .logo-hex {
+    width: 32px; height: 32px;
+    background: var(--accent-mid);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500; color: #fff;
+    letter-spacing: -0.3px;
+    flex-shrink: 0;
+  }
+  .logo-text { font-size: 13px; font-weight: 500; color: #fff; line-height: 1.3; }
+  .logo-sub { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 300; }
+
+  .sidebar-nav { padding: 16px 12px; flex: 1; }
+  .nav-label {
+    font-size: 10px; font-weight: 500; letter-spacing: 1px;
+    color: rgba(255,255,255,0.3); text-transform: uppercase;
+    padding: 0 12px; margin: 16px 0 6px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-size: 13.5px; color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    border: none; background: none; width: 100%; text-align: left;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.9); }
+  .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
+  .nav-item.active svg { opacity: 1; }
+  .nav-badge {
+    margin-left: auto; font-size: 10px; font-weight: 500;
+    background: var(--accent-mid); color: #fff;
+    padding: 2px 6px; border-radius: 99px;
+  }
+
+  .sidebar-footer {
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 11px; color: rgba(255,255,255,0.25);
+  }
+
+  /* ── MAIN ── */
+  .main { margin-left: 240px; flex: 1; }
+
+  .topbar {
+    background: var(--surface-card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-title { font-size: 15px; font-weight: 500; }
+  .topbar-meta { font-size: 12px; color: var(--ink-light); }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .contact-btn {
+    font-size: 12px; font-weight: 500;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 6px;
+    padding: 7px 14px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none; display: inline-block;
+  }
+  .contact-btn:hover { background: var(--accent-mid); }
+
+  .support-modal {
+    position: fixed; inset: 0; z-index: 500;
+    display: none; align-items: center; justify-content: center;
+    padding: 24px; background: rgba(15, 28, 20, 0.48);
+  }
+  .support-modal.open { display: flex; }
+  .support-card {
+    width: min(100%, 420px);
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 18px 60px rgba(15, 28, 20, 0.18);
+    padding: 24px;
+    position: relative;
+  }
+  .support-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 30px; height: 30px; border-radius: 50%;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--ink-light); cursor: pointer;
+    font-size: 18px; line-height: 1;
+  }
+  .support-close:hover { color: var(--ink); border-color: var(--border-strong); }
+  .support-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.9px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .support-card h3 { font-size: 20px; font-weight: 500; margin-bottom: 8px; }
+  .support-message { font-size: 13.5px; color: var(--ink-light); margin-bottom: 20px; }
+  .support-contact-list { display: grid; gap: 10px; }
+  .support-contact-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 14px; border: 1px solid var(--border);
+    border-radius: 10px; text-decoration: none; color: var(--ink);
+    background: var(--surface);
+  }
+  .support-contact-item:hover { border-color: var(--accent); background: var(--accent-light); }
+  .support-label { font-size: 11px; color: var(--ink-light); margin-bottom: 2px; }
+  .support-value { font-size: 13px; font-weight: 500; }
+  .support-action { font-size: 12px; color: var(--accent); font-weight: 500; white-space: nowrap; }
+
+  .content { padding: 40px; max-width: 960px; }
+
+  /* ── SECTIONS ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-header { margin-bottom: 28px; }
+  .section-header h2 { font-size: 22px; font-weight: 500; margin-bottom: 6px; }
+  .section-header p { font-size: 14px; color: var(--ink-light); }
+
+  /* ── COLLATERAL ── */
+  .collateral-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .coll-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-decoration: none;
+    display: block;
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+  }
+  .coll-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(30,92,56,0.1);
+  }
+  .coll-icon {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: var(--accent-light);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .coll-icon svg { width: 20px; height: 20px; color: var(--accent); }
+  .coll-title { font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+  .coll-meta { font-size: 12px; color: var(--ink-light); }
+  .coll-arrow {
+    margin-top: 14px; font-size: 11px; font-weight: 500;
+    color: var(--accent); display: flex; align-items: center; gap: 4px;
+  }
+
+
+
+  .product-stack { display: grid; gap: 22px; }
+  .product-block {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .product-head {
+    padding: 18px 20px;
+    background: linear-gradient(180deg, #fff, var(--surface));
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  }
+  .product-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.9px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 4px;
+  }
+  .product-title { font-size: 17px; font-weight: 500; color: var(--ink); }
+  .product-copy { font-size: 12.5px; color: var(--ink-light); margin-top: 4px; max-width: 560px; }
+  .product-count {
+    font-size: 11px; color: var(--ink-light); background: var(--surface-card);
+    border: 1px solid var(--border); border-radius: 999px; padding: 4px 9px; white-space: nowrap;
+  }
+  .resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px;
+    padding: 16px;
+  }
+  .resource-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    padding: 15px;
+    text-decoration: none;
+    min-height: 132px;
+    display: flex; flex-direction: column;
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+  }
+  .resource-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(30,92,56,0.1); }
+  .resource-type {
+    width: fit-content; margin-bottom: 12px;
+    font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.4px;
+    color: var(--accent); background: var(--accent-light);
+    border-radius: 5px; padding: 3px 7px;
+  }
+  .resource-title { font-size: 13.5px; line-height: 1.35; color: var(--ink); font-weight: 500; margin-bottom: 6px; }
+  .resource-meta { font-size: 11.5px; color: var(--ink-light); margin-top: auto; }
+  .native-note {
+    margin-top: 18px; padding: 14px 16px; border-radius: 10px;
+    background: var(--accent-light); border: 1px solid #d6e7dc;
+    color: var(--accent); font-size: 12.5px;
+  }
+  /* ── TRAINING ── */
+  .course-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    transition: border-color 0.15s;
+  }
+  .course-card:hover { border-color: var(--border-strong); }
+  .course-inner {
+    display: flex; align-items: center; gap: 20px;
+    padding: 20px 24px;
+    text-decoration: none;
+  }
+  .course-thumb {
+    width: 64px; height: 64px; border-radius: 8px;
+    background: var(--ink);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .course-info { flex: 1; }
+  .course-name { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+  .course-desc { font-size: 12.5px; color: var(--ink-light); margin-bottom: 10px; }
+  .course-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pill {
+    font-size: 11px; padding: 3px 9px; border-radius: 99px;
+    border: 1px solid var(--border); color: var(--ink-mid);
+    background: var(--surface);
+  }
+  .pill-green { background: var(--accent-light); border-color: transparent; color: var(--accent); }
+  .course-cta {
+    flex-shrink: 0; font-size: 13px; font-weight: 500;
+    color: var(--accent); display: flex; align-items: center; gap: 6px;
+    background: var(--accent-light); border-radius: 7px; padding: 8px 14px;
+    text-decoration: none;
+  }
+
+  .module-list {
+    border-top: 1px solid var(--border);
+    padding: 0 24px;
+  }
+  .module-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--ink-mid);
+    text-decoration: none;
+  }
+  .module-item:last-child { border-bottom: none; }
+  .module-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 500; color: var(--ink-light);
+    flex-shrink: 0;
+  }
+  .module-name { flex: 1; }
+  .module-dur { font-size: 11px; color: var(--ink-faint); }
+  .preview-tag {
+    font-size: 10px; padding: 2px 6px; border-radius: 4px;
+    background: #fff8e6; color: #a06b00; border: 1px solid #f0d898;
+  }
+
+  /* ── PRICE LIST ── */
+  .price-controls {
+    display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .price-controls input {
+    flex: 1; min-width: 200px;
+    padding: 9px 14px; border: 1px solid var(--border);
+    border-radius: 7px; font-size: 13px; background: var(--surface-card);
+    font-family: 'DM Sans', sans-serif; color: var(--ink);
+    outline: none; transition: border-color 0.15s;
+  }
+  .price-controls input:focus { border-color: var(--accent); }
+  .price-controls select {
+    padding: 9px 14px; border: 1px solid var(--border);
+    border-radius: 7px; font-size: 13px; background: var(--surface-card);
+    font-family: 'DM Sans', sans-serif; color: var(--ink);
+    outline: none; cursor: pointer;
+  }
+
+  .price-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+  .price-table { width: 100%; border-collapse: collapse; background: var(--surface-card); font-size: 13px; }
+  .price-table thead th {
+    text-align: left; padding: 11px 16px;
+    font-size: 11px; font-weight: 500; color: var(--ink-light);
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    white-space: nowrap; letter-spacing: 0.3px;
+  }
+  .price-table tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); color: var(--ink); }
+  .price-table tbody tr:last-child td { border-bottom: none; }
+  .price-table tbody tr:hover td { background: var(--surface); }
+  .cat-row td {
+    font-size: 10.5px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--ink-light);
+    background: var(--surface) !important;
+    padding: 8px 16px !important;
+  }
+  .mono { font-family: 'DM Mono', monospace; font-size: 11.5px; color: var(--ink-light); }
+  .margin-pill {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 99px;
+    background: var(--accent-light); color: var(--accent);
+  }
+  .price-note {
+    margin-top: 16px; padding: 14px 18px;
+    background: var(--red-light); border-radius: 8px; border: 1px solid #f4d0c8;
+    font-size: 12px; color: var(--red); display: flex; align-items: center; gap: 10px;
+  }
+  .count-badge {
+    font-size: 12px; color: var(--ink-light); margin-left: auto;
+    align-self: center; white-space: nowrap;
+  }
+
+  /* ── COMING SOON ── */
+  .coming-soon {
+    background: var(--surface-card);
+    border: 1px dashed var(--border-strong);
+    border-radius: 10px;
+    padding: 60px 40px;
+    text-align: center;
+  }
+  .coming-soon .cs-icon { font-size: 32px; margin-bottom: 16px; opacity: 0.3; }
+  .coming-soon h3 { font-size: 16px; font-weight: 500; margin-bottom: 8px; color: var(--ink-mid); }
+  .coming-soon p { font-size: 13px; color: var(--ink-light); }
+
+  /* ── MOBILE ── */
+  .mobile-nav-toggle {
+    display: none; position: fixed; bottom: 20px; right: 20px;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--ink); color: #fff; border: none;
+    font-size: 20px; cursor: pointer; z-index: 200;
+    align-items: center; justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); transition: transform 0.25s; }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .content { padding: 24px 20px; }
+    .topbar { padding: 0 20px; }
+    .mobile-nav-toggle { display: flex; }
+    .collateral-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-hex">CB</div>
+        <div>
+          <div class="logo-text">Cambrian Bioworks</div>
+          <div class="logo-sub">Distributor Portal</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-label">Resources</div>
+      <button class="nav-item active" onclick="switchSection('collateral', this)">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+        Collateral
+      </button>
+      <button class="nav-item" onclick="switchSection('training', this)">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg>
+        Training
+      </button>
+      <button class="nav-item" onclick="switchSection('prices', this)">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Price List
+      </button>
+
+      <div class="nav-label" style="margin-top:24px;">Coming Soon</div>
+      <button class="nav-item" onclick="switchSection('quizzes', this)">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+        Brand Guidelines
+        <span class="nav-badge">Soon</span>
+      </button>
+      <button class="nav-item" onclick="switchSection('agreements', this)">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Agreements
+        <span class="nav-badge">Soon</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      Confidential · Distributor use only<br>
+      © 2026 Cambrian Bioworks
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <div class="topbar-title" id="topbarTitle">Collateral</div>
+        <div class="topbar-meta">Cambrian Bioworks · India</div>
+      </div>
+      <div class="topbar-right">
+        <button type="button" class="contact-btn" onclick="openSupportModal()">Contact Support</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- COLLATERAL -->
+      <div class="section active" id="sec-collateral">
+        <div class="section-header">
+          <h2>Collateral Repository</h2>
+          <p>Product-wise brochures, datasheets, sales decks, application notes, and technical documents hosted directly inside this portal.</p>
+        </div>
+
+        <div class="product-stack">
+          <section class="product-block">
+            <div class="product-head">
+              <div>
+                <div class="product-kicker">Automation</div>
+                <div class="product-title">Manta</div>
+                <div class="product-copy">Automated sample preparation robot collaterals for distributor sales, demos, installation, and technical discussions.</div>
+              </div>
+              <span class="product-count">5 files</span>
+            </div>
+            <div class="resource-grid">
+              <a class="resource-card" href="collaterals/manta/manta-brochure.pdf" target="_blank"><span class="resource-type">BROCHURE</span><div class="resource-title">Manta Product Brochure</div><div class="resource-meta">PDF · Customer-facing</div></a>
+              <a class="resource-card" href="collaterals/manta/manta-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Manta Technical Datasheet</div><div class="resource-meta">PDF · Specifications</div></a>
+              <a class="resource-card" href="collaterals/manta/manta-sales-deck.pdf" target="_blank"><span class="resource-type">SALES DECK</span><div class="resource-title">Manta Distributor Sales Deck</div><div class="resource-meta">PDF · Pitch material</div></a>
+              <a class="resource-card" href="collaterals/manta/manta-installation-checklist.pdf" target="_blank"><span class="resource-type">CHECKLIST</span><div class="resource-title">Installation & Site Readiness Checklist</div><div class="resource-meta">PDF · Pre-installation</div></a>
+              <a class="resource-card" href="collaterals/manta/manta-faq.pdf" target="_blank"><span class="resource-type">FAQ</span><div class="resource-title">Manta Technical FAQs</div><div class="resource-meta">PDF · Sales support</div></a>
+            </div>
+          </section>
+
+          <section class="product-block">
+            <div class="product-head">
+              <div>
+                <div class="product-kicker">Pre-analytical Automation</div>
+                <div class="product-title">Beluga</div>
+                <div class="product-copy">Collateral for end-to-end primary tube to eluate workflows, traceability, contamination control, and clinical lab automation positioning.</div>
+              </div>
+              <span class="product-count">4 files</span>
+            </div>
+            <div class="resource-grid">
+              <a class="resource-card" href="collaterals/beluga/beluga-brochure.pdf" target="_blank"><span class="resource-type">BROCHURE</span><div class="resource-title">Beluga Product Brochure</div><div class="resource-meta">PDF · Customer-facing</div></a>
+              <a class="resource-card" href="collaterals/beluga/beluga-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Beluga Technical Datasheet</div><div class="resource-meta">PDF · Specifications</div></a>
+              <a class="resource-card" href="collaterals/beluga/beluga-sales-deck.pdf" target="_blank"><span class="resource-type">SALES DECK</span><div class="resource-title">Beluga Distributor Sales Deck</div><div class="resource-meta">PDF · Pitch material</div></a>
+              <a class="resource-card" href="collaterals/beluga/beluga-traceability-note.pdf" target="_blank"><span class="resource-type">TECH NOTE</span><div class="resource-title">Traceability & Audit Trail Note</div><div class="resource-meta">PDF · Technical reference</div></a>
+            </div>
+          </section>
+
+          <section class="product-block">
+            <div class="product-head">
+              <div>
+                <div class="product-kicker">Library Preparation</div>
+                <div class="product-title">Orca</div>
+                <div class="product-copy">Sales and technical materials for automated NGS library preparation workflows and open kit compatibility.</div>
+              </div>
+              <span class="product-count">3 files</span>
+            </div>
+            <div class="resource-grid">
+              <a class="resource-card" href="collaterals/orca/orca-brochure.pdf" target="_blank"><span class="resource-type">BROCHURE</span><div class="resource-title">Orca Product Brochure</div><div class="resource-meta">PDF · Customer-facing</div></a>
+              <a class="resource-card" href="collaterals/orca/orca-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Orca Technical Datasheet</div><div class="resource-meta">PDF · Specifications</div></a>
+              <a class="resource-card" href="collaterals/orca/orca-sales-deck.pdf" target="_blank"><span class="resource-type">SALES DECK</span><div class="resource-title">Orca Distributor Sales Deck</div><div class="resource-meta">PDF · Pitch material</div></a>
+            </div>
+          </section>
+
+          <section class="product-block">
+            <div class="product-head">
+              <div>
+                <div class="product-kicker">Reagents</div>
+                <div class="product-title">Extraction Kits</div>
+                <div class="product-copy">Product-wise datasheets and application notes for automated and manual nucleic acid extraction kits.</div>
+              </div>
+              <span class="product-count">6 files</span>
+            </div>
+            <div class="resource-grid">
+              <a class="resource-card" href="collaterals/extraction-kits/whole-blood-gdna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Whole Blood gDNA Isolation Kit</div><div class="resource-meta">PDF · Automated / manual</div></a>
+              <a class="resource-card" href="collaterals/extraction-kits/onco-seek-cfdna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">OncoSeek cfDNA Isolation Kit</div><div class="resource-meta">PDF · Liquid biopsy</div></a>
+              <a class="resource-card" href="collaterals/extraction-kits/ffpe-gdna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">FFPE gDNA Isolation Kit</div><div class="resource-meta">PDF · FFPE workflow</div></a>
+              <a class="resource-card" href="collaterals/extraction-kits/ffpe-rna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">FFPE RNA Extraction Kit</div><div class="resource-meta">PDF · RNA workflow</div></a>
+              <a class="resource-card" href="collaterals/extraction-kits/blood-rna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Blood RNA Extraction Kit</div><div class="resource-meta">PDF · Blood RNA</div></a>
+              <a class="resource-card" href="collaterals/extraction-kits/viral-dna-rna-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Viral DNA/RNA Isolation Kit</div><div class="resource-meta">PDF · Viral workflow</div></a>
+            </div>
+          </section>
+
+          <section class="product-block">
+            <div class="product-head">
+              <div>
+                <div class="product-kicker">Cleanup & Size Selection</div>
+                <div class="product-title">CamSelect</div>
+                <div class="product-copy">Collateral for CamSelect NGS cleanup beads and CamSelect Long size selection for long-read sequencing workflows.</div>
+              </div>
+              <span class="product-count">4 files</span>
+            </div>
+            <div class="resource-grid">
+              <a class="resource-card" href="collaterals/camselect/camselect-ngs-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">CamSelect NGS Datasheet</div><div class="resource-meta">PDF · Cleanup beads</div></a>
+              <a class="resource-card" href="collaterals/camselect/camselect-long-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">CamSelect Long Datasheet</div><div class="resource-meta">PDF · Long-read size selection</div></a>
+              <a class="resource-card" href="collaterals/camselect/camselect-long-application-note.pdf" target="_blank"><span class="resource-type">APP NOTE</span><div class="resource-title">CamSelect Long Application Note</div><div class="resource-meta">PDF · Technical reference</div></a>
+              <a class="resource-card" href="collaterals/camselect/camselect-sales-deck.pdf" target="_blank"><span class="resource-type">SALES DECK</span><div class="resource-title">CamSelect Distributor Sales Deck</div><div class="resource-meta">PDF · Pitch material</div></a>
+            </div>
+          </section>
+
+          <section class="product-block">
+            <div class="product-head">
+              <div>
+                <div class="product-kicker">Digital Pathology</div>
+                <div class="product-title">Eva</div>
+                <div class="product-copy">Digital pathology software collateral for microscopy capture, image review, and workflow modernization conversations.</div>
+              </div>
+              <span class="product-count">3 files</span>
+            </div>
+            <div class="resource-grid">
+              <a class="resource-card" href="collaterals/eva/eva-brochure.pdf" target="_blank"><span class="resource-type">BROCHURE</span><div class="resource-title">Eva Product Brochure</div><div class="resource-meta">PDF · Customer-facing</div></a>
+              <a class="resource-card" href="collaterals/eva/eva-datasheet.pdf" target="_blank"><span class="resource-type">DATASHEET</span><div class="resource-title">Eva Technical Datasheet</div><div class="resource-meta">PDF · Specifications</div></a>
+              <a class="resource-card" href="collaterals/eva/eva-sales-deck.pdf" target="_blank"><span class="resource-type">SALES DECK</span><div class="resource-title">Eva Distributor Sales Deck</div><div class="resource-meta">PDF · Pitch material</div></a>
+            </div>
+          </section>
+        </div>
+
+        <div class="native-note">
+          To make the links live, place each PDF inside the matching local folder path shown in the link, for example: <strong>collaterals/manta/manta-brochure.pdf</strong>. This keeps the collateral hosted natively with the portal instead of sending users to Notion.
+        </div>
+      </div>
+
+      <!-- TRAINING -->
+      <div class="section" id="sec-training">
+        <div class="section-header">
+          <h2>Training & Certification</h2>
+          <p>Complete courses to get certified on Cambrian products. Certificates are awarded on completion.</p>
+        </div>
+
+        <div class="course-card">
+          <a class="course-inner" href="https://cambrian-biotech-pvt-ltd1.odoo.com/slides/manta-by-cambrian-bioworks-2" target="_blank">
+            <div class="course-thumb">🤖</div>
+            <div class="course-info">
+              <div class="course-name">Manta by Cambrian Bioworks</div>
+              <div class="course-desc">Learn the full sales pitch, installation workflow, and technical FAQs for the Manta automated sample prep robot.</div>
+              <div class="course-pills">
+                <span class="pill">2 hrs 28 min</span>
+                <span class="pill">4 modules</span>
+                <span class="pill">9 lessons</span>
+                <span class="pill pill-green">Certificate included</span>
+              </div>
+            </div>
+            <div class="course-cta">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+              Start course
+            </div>
+          </a>
+          <div class="module-list">
+            <a class="module-item" href="https://cambrian-biotech-pvt-ltd1.odoo.com/slides/slide/how-manta-works-virtual-tour-7" target="_blank">
+              <div class="module-num">1</div>
+              <div class="module-name">Introduction — Magnetic bead-based extractions & Manta</div>
+              <span class="preview-tag">Preview</span>
+              <div class="module-dur">10 min</div>
+            </a>
+            <a class="module-item" href="https://cambrian-biotech-pvt-ltd1.odoo.com/slides/slide/cheat-sheet-5" target="_blank">
+              <div class="module-num">2</div>
+              <div class="module-name">Manta Sales Pitch — Cheat Sheet + Deck walkthrough</div>
+              <span class="preview-tag">Preview</span>
+              <div class="module-dur">2 hrs</div>
+            </a>
+            <a class="module-item" href="https://cambrian-biotech-pvt-ltd1.odoo.com/slides/slide/unbox-manta-9" target="_blank">
+              <div class="module-num">3</div>
+              <div class="module-name">How to install Manta — Unboxing, IQ/OQ/PQ, Checklist</div>
+              <span class="preview-tag">Preview</span>
+              <div class="module-dur">18 min</div>
+            </a>
+            <a class="module-item" href="https://cambrian-biotech-pvt-ltd1.odoo.com/slides/slide/frequently-asked-questions-12" target="_blank">
+              <div class="module-num">4</div>
+              <div class="module-name">FAQs</div>
+              <span class="preview-tag">Preview</span>
+              <div class="module-dur">—</div>
+            </a>
+          </div>
+        </div>
+
+        <p style="font-size:12px; color:var(--ink-light); margin-top:8px;">More courses coming soon. Share additional Odoo course links to add them here.</p>
+      </div>
+
+      <!-- PRICES -->
+      <div class="section" id="sec-prices">
+        <div class="section-header">
+          <h2>Price List — India 2026</h2>
+          <p>All prices in INR, exclusive of taxes. FOB pricing — shipping charges applicable.</p>
+        </div>
+
+        <div class="price-controls">
+          <input type="text" id="priceSearch" placeholder="Search by product name or catalog number…" oninput="filterPrices()" />
+          <select id="catFilter" onchange="filterPrices()">
+            <option value="">All categories</option>
+            <option value="automated">Automated Extraction Kits</option>
+            <option value="camselect">CamSelect NGS</option>
+            <option value="manual">Manual Extraction Kits</option>
+            <option value="devices">Devices & Accessories</option>
+          </select>
+          <span class="count-badge" id="countBadge"></span>
+        </div>
+
+        <div class="price-wrap">
+          <table class="price-table">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Catalog No.</th>
+                <th>Pack Size</th>
+                <th>Unit Price (INR)</th>
+                <th>Per Rxn</th>
+                <th>Margin</th>
+              </tr>
+            </thead>
+            <tbody id="priceBody"></tbody>
+          </table>
+        </div>
+
+        <div class="price-note">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Confidential — for distributor use only. Do not share externally.
+        </div>
+      </div>
+
+      <!-- QUIZZES COMING SOON -->
+      <div class="section" id="sec-quizzes">
+        <div class="section-header">
+          <h2>Brand Guidelines</h2>
+          <p>Access approved brand usage rules, logo guidance, and visual identity references.</p>
+        </div>
+        <div class="coming-soon">
+          <div class="cs-icon">🎓</div>
+          <h3>Coming soon</h3>
+          <p>Brand guideline materials are being prepared.<br>Check back shortly.</p>
+        </div>
+      </div>
+
+      <!-- AGREEMENTS COMING SOON -->
+      <div class="section" id="sec-agreements">
+        <div class="section-header">
+          <h2>Agreements</h2>
+          <p>Distributor agreements and signed documents.</p>
+        </div>
+        <div class="coming-soon">
+          <div class="cs-icon">📄</div>
+          <h3>Coming soon</h3>
+          <p>Your agreements section is being set up.<br>Contact support if you need a document urgently.</p>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<div class="support-modal" id="supportModal" aria-hidden="true" onclick="handleSupportBackdrop(event)">
+  <div class="support-card" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+    <button type="button" class="support-close" onclick="closeSupportModal()" aria-label="Close support popup">×</button>
+    <div class="support-kicker">Distributor Support</div>
+    <h3 id="supportTitle">Need help?</h3>
+    <p class="support-message">Send us a note or call us directly. We’ll reach back to you as soon as possible.</p>
+    <div class="support-contact-list">
+      <a class="support-contact-item" href="mailto:asilrohit@cambrianbioworks.com?subject=Distributor%20Portal%20Support&body=Hi%20Rohit%2C%0A%0AI%20need%20support%20with%20the%20Cambrian%20Distributor%20Portal.%0A%0ARegards%2C">
+        <div>
+          <div class="support-label">Email</div>
+          <div class="support-value">asilrohit@cambrianbioworks.com</div>
+        </div>
+        <div class="support-action">Email →</div>
+      </a>
+      <a class="support-contact-item" href="tel:+919035674375">
+        <div>
+          <div class="support-label">Phone</div>
+          <div class="support-value">+91 90356 74375</div>
+        </div>
+        <div class="support-action">Call →</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<button class="mobile-nav-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<script>
+const prices = [
+  { cat:"devices", catLabel:"Automated Sample Preparation Devices", name:"Manta — Automated Sample Prep Robot", code:"CBWM100-C", pack:"1 unit", price:1000000, perRxn:null, margin:"50%" },
+  { cat:"automated", catLabel:"Nucleic Acid Extraction Kits (Automated — Manta)", name:"Cambrian Whole Blood gDNA Isolation Kit", code:"CBWM068.64", pack:"64 rxn", price:9152, perRxn:143, margin:"30%" },
+  { cat:"automated", name:"Cambrian Viral DNA/RNA Isolation Kit", code:"CBWM030.64", pack:"64 rxn", price:9152, perRxn:143, margin:"30%" },
+  { cat:"automated", name:"Cambrian Cord Blood gDNA Isolation Kit", code:"CBWM068CB.64", pack:"64 rxn", price:9152, perRxn:143, margin:"30%" },
+  { cat:"automated", name:"Cambrian Saliva DNA Isolation Kit", code:"CBWM085.64", pack:"64 rxn", price:9152, perRxn:143, margin:"30%" },
+  { cat:"automated", name:"Cambrian Tissue gDNA Isolation Kit", code:"CBWM096.64", pack:"64 rxn", price:9152, perRxn:143, margin:"30%" },
+  { cat:"automated", name:"Cambrian FFPE gDNA Isolation Kit", code:"CBWM100.64", pack:"64 rxn", price:16320, perRxn:255, margin:"30%" },
+  { cat:"automated", name:"Cambrian Stool DNA Extraction Kit", code:"CBWM140.64", pack:"64 rxn", price:16320, perRxn:255, margin:"30%" },
+  { cat:"automated", name:"Cambrian Blood RNA Extraction Kit", code:"CBWM160.32", pack:"32 rxn", price:9600, perRxn:300, margin:"30%" },
+  { cat:"automated", name:"Cambrian OncoSeek cfDNA Isolation Kit", code:"CBWM170.32", pack:"32 rxn", price:20500, perRxn:641, margin:"30%" },
+  { cat:"automated", name:"Cambrian FFPE RNA Extraction Kit", code:"CBWM201.32", pack:"32 rxn", price:16320, perRxn:255, margin:"30%" },
+  { cat:"camselect", catLabel:"CamSelect NGS — Magnetic Beads for PCR Cleanup & Size Selection", name:"Cambrian CamSelect NGS 25 ml", code:"CBWD010.25", pack:"25 ml", price:46250, perRxn:null, margin:"35%" },
+  { cat:"camselect", name:"Cambrian CamSelect NGS 75 ml", code:"CBWD010.75", pack:"75 ml", price:94500, perRxn:null, margin:"40%" },
+  { cat:"camselect", name:"Cambrian CamSelect NGS 450 ml", code:"CBWD010.450", pack:"450 ml", price:337500, perRxn:null, margin:"40%" },
+  { cat:"manual", catLabel:"Nucleic Acid Extraction Kits (Manual)", name:"Cambrian Viral DNA/RNA Isolation Kit", code:"CBWC030.250", pack:"250 rxn", price:27500, perRxn:110, margin:"30%" },
+  { cat:"manual", name:"Cambrian Viral DNA/RNA Isolation Kit", code:"CBWC030.50", pack:"50 rxn", price:5500, perRxn:110, margin:"30%" },
+  { cat:"manual", name:"Cambrian Multi gDNA Isolation Kit", code:"CBWC040.250", pack:"250 rxn", price:37500, perRxn:150, margin:"30%" },
+  { cat:"manual", name:"Cambrian Whole Blood gDNA Isolation Kit", code:"CBWC068.250", pack:"250 rxn", price:37500, perRxn:150, margin:"30%" },
+  { cat:"manual", name:"Cambrian Whole Blood gDNA Isolation Kit", code:"CBWC068.50", pack:"50 rxn", price:6000, perRxn:120, margin:"30%" },
+  { cat:"manual", name:"Cambrian DBS gDNA Isolation Kit", code:"CBWC068.DBS250", pack:"250 rxn", price:27500, perRxn:110, margin:"30%" },
+  { cat:"manual", name:"Cambrian Whole Blood & Cord Blood gDNA Isolation Kit", code:"CBWC068.WCB250", pack:"250 rxn", price:37500, perRxn:150, margin:"30%" },
+  { cat:"manual", name:"Cambrian Saliva DNA Isolation Kit", code:"CBWC085.250", pack:"250 rxn", price:37500, perRxn:150, margin:"30%" },
+  { cat:"manual", name:"Cambrian Saliva DNA Isolation Kit", code:"CBWC085.50", pack:"50 rxn", price:6000, perRxn:120, margin:"30%" },
+  { cat:"manual", name:"Cambrian Tissue gDNA Isolation Kit", code:"CBWC096.250", pack:"250 rxn", price:37500, perRxn:150, margin:"30%" },
+  { cat:"manual", name:"Cambrian FFPE gDNA Isolation Kit", code:"CBWC100.250", pack:"250 rxn", price:65750, perRxn:263, margin:"30%" },
+  { cat:"manual", name:"Cambrian FFPE gDNA Isolation Kit", code:"CBWC100.50", pack:"50 rxn", price:13150, perRxn:263, margin:"30%" },
+  { cat:"manual", name:"Cambrian Blood RNA Isolation Kit", code:"CBWC160.50", pack:"50 rxn", price:14000, perRxn:280, margin:"30%" },
+  { cat:"manual", name:"Cambrian OncoSeek cfDNA Isolation Kit", code:"CBWC170.50", pack:"25–50 rxn", price:38000, perRxn:760, margin:"30%" },
+  { cat:"manual", name:"Cambrian FFPE RNA Extraction Kit", code:"CBWC201.50", pack:"50 rxn", price:18000, perRxn:360, margin:"30%" },
+  { cat:"devices", catLabel:"Sample Collection & Accessories", name:"CamOptima Buccal Swab Collection Kit", code:"CBWA015.B", pack:"1 unit", price:289, perRxn:null, margin:"30%" },
+  { cat:"devices", name:"Magnetic Stand (8 × 1.5–2 mL)", code:"CBWD002", pack:"1 unit", price:19500, perRxn:null, margin:"30%" },
+  { cat:"devices", name:"Magnetic Stand (4 × 15 mL)", code:"CBWD028", pack:"1 unit", price:60000, perRxn:null, margin:"30%" },
+];
+
+function fmt(n) { return "₹" + n.toLocaleString("en-IN"); }
+
+function renderTable(data) {
+  const body = document.getElementById("priceBody");
+  let html = ""; let lastCat = null;
+  data.forEach(p => {
+    const catKey = p.catLabel || p.cat;
+    if (p.catLabel && catKey !== lastCat) {
+      html += `<tr class="cat-row"><td colspan="6">${p.catLabel}</td></tr>`;
+      lastCat = catKey;
+    }
+    html += `<tr>
+      <td>${p.name}</td>
+      <td class="mono">${p.code}</td>
+      <td style="color:var(--ink-light)">${p.pack}</td>
+      <td style="font-weight:500">${fmt(p.price)}</td>
+      <td style="color:var(--ink-light)">${p.perRxn ? fmt(p.perRxn) : "—"}</td>
+      <td><span class="margin-pill">${p.margin}</span></td>
+    </tr>`;
+  });
+  body.innerHTML = html;
+  document.getElementById("countBadge").textContent = data.length + " products";
+}
+
+function filterPrices() {
+  const q = document.getElementById("priceSearch").value.toLowerCase();
+  const cat = document.getElementById("catFilter").value;
+  const filtered = prices.filter(p => {
+    const matchQ = !q || p.name.toLowerCase().includes(q) || p.code.toLowerCase().includes(q);
+    const matchCat = !cat || p.cat === cat;
+    return matchQ && matchCat;
+  });
+  renderTable(filtered);
+}
+
+const sectionTitles = {
+  collateral: "Collateral", training: "Training & Certification",
+  prices: "Price List", quizzes: "Brand Guidelines", agreements: "Agreements"
+};
+
+function switchSection(id, btn) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+  document.getElementById("sec-" + id).classList.add("active");
+  btn.classList.add("active");
+  document.getElementById("topbarTitle").textContent = sectionTitles[id] || id;
+  document.getElementById("sidebar").classList.remove("open");
+}
+
+function openSupportModal() {
+  const modal = document.getElementById("supportModal");
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closeSupportModal() {
+  const modal = document.getElementById("supportModal");
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+function handleSupportBackdrop(event) {
+  if (event.target.id === "supportModal") closeSupportModal();
+}
+
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") closeSupportModal();
+});
+
+renderTable(prices);
+</script>
+</body>
+</html>
